@@ -1,0 +1,153 @@
+/* ===== GLOBAL STYLES ===== */
+* { box-sizing: border-box; }
+body { background-color: #f0f7f0; font-family: 'Segoe UI', sans-serif; }
+
+/* ===== NAVBAR ===== */
+.navbar { background-color: #1b5e20; padding: 12px 20px; }
+.navbar-brand { color: #fff !important; font-weight: 700; font-size: 22px; }
+.navbar-brand:hover { color: #a5d6a7 !important; }
+.nav-link { color: #c8e6c9 !important; font-size: 15px; }
+.nav-link:hover { color: #ffffff !important; }
+.nav-link.active { color: #ffffff !important; font-weight: 600; }
+.navbar-toggler { border-color: #a5d6a7; }
+.navbar-toggler-icon {
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.75%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+}
+
+/* ===== FOOTER ===== */
+footer {
+    background-color: #1b5e20;
+    color: #c8e6c9;
+    padding: 40px 0 20px;
+    margin-top: 60px;
+}
+
+/* ===== SECTION TITLE ===== */
+.section-title {
+    color: #1b5e20;
+    font-weight: 700;
+    font-size: 26px;
+    border-left: 5px solid #66bb6a;
+    padding-left: 12px;
+}
+
+/* ===== BUTTONS ===== */
+.btn-green {
+    background-color: #2e7d32;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-weight: 600;
+}
+.btn-green:hover { background-color: #1b5e20; color: white; }
+
+/* ===== FORMS ===== */
+.form-control:focus, .form-select:focus {
+    border-color: #66bb6a;
+    box-shadow: 0 0 0 0.2rem rgba(102,187,106,0.25);
+}
+
+/* ===== CARDS ===== */
+.card-green {
+    background: white;
+    border-radius: 15px;
+    padding: 25px;
+    box-shadow: 0 3px 15px rgba(0,0,0,0.08);
+}
+
+/* ===== MOBILE RESPONSIVE ===== */
+
+/* Navbar mobile */
+@media (max-width: 991px) {
+    .navbar-collapse {
+        background: #1b5e20;
+        padding: 15px;
+        border-radius: 10px;
+        margin-top: 10px;
+    }
+    .nav-link {
+        padding: 10px 5px !important;
+        border-bottom: 1px solid #2e7d32;
+    }
+    .nav-link:last-child { border-bottom: none; }
+}
+
+/* Products page mobile */
+@media (max-width: 576px) {
+    /* 2 columns on mobile */
+    .product-card { font-size: 13px; }
+    .product-img-placeholder { height: 130px; font-size: 45px; }
+    .product-body { padding: 10px; }
+    .product-name { font-size: 13px; }
+    .product-price { font-size: 15px; }
+    .btn-add-cart, .btn-wishlist { font-size: 11px; padding: 5px 8px; }
+
+    /* Section title smaller */
+    .section-title { font-size: 20px; }
+
+    /* Hero section mobile */
+    .hero-section { padding: 40px 15px; }
+    .hero-section h1 { font-size: 26px; }
+    .hero-section p { font-size: 14px; }
+
+    /* Category cards mobile */
+    .category-icon { font-size: 35px; }
+    .category-card h5 { font-size: 14px; }
+    .category-card p { font-size: 12px; }
+}
+
+/* Cart table mobile */
+@media (max-width: 768px) {
+    .cart-table { overflow-x: auto; display: block; }
+    .cart-table table { min-width: 500px; }
+
+    /* Summary box not sticky on mobile */
+    .summary-box { position: relative !important; top: 0 !important; }
+
+    /* Checkout form */
+    .checkout-box { padding: 20px; }
+
+    /* Order cards */
+    .order-card { padding: 15px; }
+    .tracking-bar::before { width: 75%; left: 12%; }
+}
+
+/* Profile mobile */
+@media (max-width: 768px) {
+    .avatar { width: 70px; height: 70px; font-size: 28px; }
+    .stat-box h3 { font-size: 18px; }
+}
+
+/* Admin sidebar mobile */
+@media (max-width: 768px) {
+    .sidebar { display: none; }
+    .main-content { margin-left: 0 !important; }
+}
+
+/* Footer mobile */
+@media (max-width: 768px) {
+    footer { text-align: center; }
+    footer .col-md-6.text-md-end { text-align: center !important; }
+}
+
+/* Product detail mobile */
+@media (max-width: 768px) {
+    .product-img-box { height: 220px; font-size: 80px; }
+    .price-tag { font-size: 24px; }
+    .btn-cart, .btn-wish { padding: 10px 15px; font-size: 14px; }
+}
+
+/* Payment page mobile */
+@media (max-width: 576px) {
+    .payment-box { padding: 20px; }
+    .amount-display h2 { font-size: 28px; }
+}
+
+/* Order success mobile */
+@media (max-width: 576px) {
+    .success-box { padding: 25px 15px; }
+    .tracking-bar { flex-wrap: wrap; gap: 10px; }
+    .tracking-bar::before { display: none; }
+    .track-step { width: 45%; margin-bottom: 10px; }
+}
