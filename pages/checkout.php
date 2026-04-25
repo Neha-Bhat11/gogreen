@@ -235,12 +235,26 @@ $user = $stmt->fetch();
                     </div>
                 </div>
 
-                <div class="mt-3 p-2"
-                     style="background:#e8f5e9; border-radius:8px;
-                            font-size:13px; color:#2e7d32;">
-                    🚚 Free delivery across Karnataka<br>
-                    📦 Estimated delivery: 7 working days
-                </div>
+                <!-- First order discount notice -->
+<?php
+$stmt2 = $pdo->prepare("SELECT COUNT(*) FROM orders WHERE user_id = ?");
+$stmt2->execute([$user_id]);
+$existing_orders = $stmt2->fetchColumn();
+?>
+<?php if ($existing_orders == 0): ?>
+<div class="alert alert-success mt-2" style="font-size:13px;">
+    🎉 <strong>First Order Bonus!</strong>
+    You get <strong>10% discount</strong> on your first order!
+    This will be applied automatically at payment.
+</div>
+<?php endif; ?>
+
+<div class="mt-3 p-2"
+     style="background:#e8f5e9; border-radius:8px;
+            font-size:13px; color:#2e7d32;">
+    🚚 Free delivery across Karnataka<br>
+    📦 Estimated delivery: 7 working days
+</div>
             </div>
         </div>
     </div>

@@ -108,17 +108,30 @@ $final_amount = $total_amount - $discount;
         <div class="row g-4">
             <!-- CART ITEMS -->
             <div class="col-lg-8">
-                <?php if ($total_qty >= 10): ?>
-                    <div class="alert alert-success mb-3">
-                        🎉 <strong>10% discount applied!</strong>
-                        You ordered <?= $total_qty ?> packets.
-                    </div>
-                <?php else: ?>
-                    <div class="alert alert-info mb-3">
-                        💡 Order <strong><?= 10 - $total_qty ?> more</strong>
-                        seed packets to get 10% discount!
-                    </div>
-                <?php endif; ?>
+             <?php
+// Check if first order
+$stmt_fo = $pdo->prepare("SELECT COUNT(*) FROM orders WHERE user_id = ?");
+$stmt_fo->execute([$user_id]);
+$existing_orders = $stmt_fo->fetchColumn();
+?>
+
+<?php if ($existing_orders == 0): ?>
+    <div class="alert alert-success mb-3">
+        🎉 <strong>First Order Special!</strong>
+        You get <strong>10% discount</strong>
+        automatically on your first order! 🌱
+    </div>
+<?php elseif ($total_qty >= 10): ?>
+    <div class="alert alert-success mb-3">
+        🎉 <strong>10% discount applied!</strong>
+        You ordered <?= $total_qty ?> packets.
+    </div>
+<?php else: ?>
+    <div class="alert alert-info mb-3">
+        💡 Order <strong><?= 10 - $total_qty ?> more</strong>
+        seed packets to get 10% discount!
+    </div>
+<?php endif; ?>   
 
                 <div class="cart-table">
                     <table class="table mb-0">

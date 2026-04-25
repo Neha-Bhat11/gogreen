@@ -123,10 +123,21 @@ $order = $_SESSION['pending_order'];
 
                 <!-- Amount Display -->
                 <div class="amount-display">
-                    <p>Total Amount to Pay</p>
-                    <h2>₹<?= number_format($order['final_amount'], 2) ?></h2>
-                    <p>Order for <?= htmlspecialchars($order['full_name']) ?></p>
-                </div>
+    <p>Total Amount to Pay</p>
+    <h2>₹<?= number_format($order['final_amount'], 2) ?></h2>
+    <p>Order for <?= htmlspecialchars($order['full_name']) ?></p>
+    <?php if (isset($order['is_first_order']) && $order['is_first_order']): ?>
+        <div style="background:rgba(255,255,255,0.2); border-radius:8px;
+                    padding:6px 12px; margin-top:8px; font-size:13px;">
+            🎉 First Order Discount Applied: −₹<?= number_format($order['discount'], 2) ?>
+        </div>
+    <?php elseif (isset($order['discount_reason']) && $order['discount_reason'] == 'bulk_order'): ?>
+        <div style="background:rgba(255,255,255,0.2); border-radius:8px;
+                    padding:6px 12px; margin-top:8px; font-size:13px;">
+            💰 Bulk Order Discount Applied: −₹<?= number_format($order['discount'], 2) ?>
+        </div>
+    <?php endif; ?>
+</div>
 
                 <h5 class="section-heading">💳 Choose Payment Method</h5>
 

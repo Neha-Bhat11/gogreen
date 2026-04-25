@@ -38,17 +38,42 @@ if ($action == 'save_order_session') {
         $total_qty    += $item['quantity'];
         $total_amount += $item['price'] * $item['quantity'];
     }
-    $discount     = ($total_qty >= 10) ? $total_amount * 0.10 : 0;
+
+    // Check if this is user's first order
+    $stmt = $pdo->prepare("SELECT COUNT(*) FROM orders WHERE user_id = ?");
+    $stmt->execute([$user_id]);
+    $order_count = $stmt->fetchColumn();
+    $is_first_order = ($order_count == 0);
+
+    // Calculate discount
+    $discount = 0;
+    $discount_reason = '';
+
+    if ($is_first_order) {
+        // First order discount 10%
+        $discount = $total_amount * 0.10;
+        $discount_reason = 'first_order';
+    } elseif ($total_qty >= 10) {
+        // 10+ packets discount 10%
+        $discount = $total_amount * 0.10;
+        $discount_reason = 'bulk_order';
+    }
+
     $final_amount = $total_amount - $discount;
 
-    $_SESSION['pending_order']['total_amount'] = $total_amount;
-    $_SESSION['pending_order']['discount']     = $discount;
-    $_SESSION['pending_order']['final_amount'] = $final_amount;
+    $_SESSION['pending_order']['total_amount']    = $total_amount;
+    $_SESSION['pending_order']['discount']        = $discount;
+    $_SESSION['pending_order']['final_amount']    = $final_amount;
+    $_SESSION['pending_order']['is_first_order']  = $is_first_order;
+    $_SESSION['pending_order']['discount_reason'] = $discount_reason;
 
-    echo json_encode(['success' => true]);
+    echo json_encode([
+        'success'        => true,
+        'is_first_order' => $is_first_order,
+        'discount'       => $discount
+    ]);
     exit();
 }
-
 // PLACE ORDER AFTER PAYMENT
 if ($action == 'place_order') {
     if (!isset($_SESSION['pending_order'])) {

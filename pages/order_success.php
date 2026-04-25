@@ -24,6 +24,13 @@ if (!$order) {
     header("Location: home.php");
     exit();
 }
+
+// Check if this was first order
+$stmt3 = $pdo->prepare("SELECT COUNT(*) FROM orders
+                         WHERE user_id = ? AND id < ?");
+$stmt3->execute([$_SESSION['user_id'], $order['id']]);
+$prev_orders = $stmt3->fetchColumn();
+$is_first_order = ($prev_orders == 0);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -83,6 +90,12 @@ if (!$order) {
             text-decoration: none; display: inline-block;
         }
         .btn-green:hover { background: #1b5e20; color: white; }
+        .first-order-badge {
+            background: linear-gradient(135deg, #ff6f00, #ffa000);
+            color: white; border-radius: 10px;
+            padding: 12px 20px; margin-bottom: 15px;
+            font-size: 14px; font-weight: 600;
+        }
 
         @media (max-width: 576px) {
             .success-box { padding: 25px 15px; }
@@ -111,6 +124,15 @@ if (!$order) {
                     <strong><?= htmlspecialchars($order['full_name']) ?></strong>!
                     Your seeds are on their way 🌱
                 </p>
+
+                <!-- First Order Special Badge -->
+                <?php if ($is_first_order && $order['discount'] > 0): ?>
+                <div class="first-order-badge">
+                    🎉 Congratulations on your First Order!
+                    You saved ₹<?= number_format($order['discount'], 2) ?>
+                    with our First Order Discount!
+                </div>
+                <?php endif; ?>
 
                 <!-- Order ID -->
                 <div class="alert alert-success" style="font-size:14px;">
@@ -142,14 +164,20 @@ if (!$order) {
                             ₹<?= number_format($order['total_amount'], 2) ?>
                         </strong>
                     </div>
+
                     <?php if ($order['discount'] > 0): ?>
                     <div class="order-detail-row text-success">
-                        <span>Discount:</span>
+                        <span>
+                            <?= $is_first_order
+                                ? '🎉 First Order Discount (10%):'
+                                : '💰 Bulk Order Discount (10%):' ?>
+                        </span>
                         <strong>
                             − ₹<?= number_format($order['discount'], 2) ?>
                         </strong>
                     </div>
                     <?php endif; ?>
+
                     <div class="order-detail-row">
                         <span style="font-weight:700;">Amount Paid:</span>
                         <strong style="color:#e65100; font-size:18px;">
