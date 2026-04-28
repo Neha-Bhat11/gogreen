@@ -376,6 +376,7 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY type, name")->fetch
                             <option value="flowers">Flowers</option>
                             <option value="vegetables">Vegetables</option>
                             <option value="fruits">Fruits</option>
+                            
                         </select>
                     </div>
                     <div class="mb-3">
