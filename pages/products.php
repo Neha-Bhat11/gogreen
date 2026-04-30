@@ -152,15 +152,17 @@ $cats = $pdo->query("SELECT * FROM categories ORDER BY type, name")->fetchAll();
 
     <!-- TYPE TABS -->
     <div class="d-flex gap-2 flex-wrap mb-4">
-        <a href="products.php"
-           class="type-tab <?= (!$type) ? 'active' : '' ?>">🌿 All</a>
-        <a href="products.php?type=flowers"
-           class="type-tab <?= ($type=='flowers') ? 'active' : '' ?>">🌸 Flowers</a>
-        <a href="products.php?type=vegetables"
-           class="type-tab <?= ($type=='vegetables') ? 'active' : '' ?>">🥦 Vegetables</a>
-        <a href="products.php?type=fruits"
-           class="type-tab <?= ($type=='fruits') ? 'active' : '' ?>">🍎 Fruits</a>
-    </div>
+    <a href="products.php"
+       class="type-tab <?= (!$type) ? 'active' : '' ?>">🌿 All</a>
+    <a href="products.php?type=flowers"
+       class="type-tab <?= ($type=='flowers') ? 'active' : '' ?>">🌸 Flowers</a>
+    <a href="products.php?type=vegetables"
+       class="type-tab <?= ($type=='vegetables') ? 'active' : '' ?>">🥦 Vegetables</a>
+    <a href="products.php?type=fruits"
+       class="type-tab <?= ($type=='fruits') ? 'active' : '' ?>">🍎 Fruits</a>
+    <a href="products.php?type=plants"
+       class="type-tab <?= ($type=='plants') ? 'active' : '' ?>">🪴 Plants</a>
+</div>
 
     <div class="row">
         <!-- SIDEBAR -->
@@ -195,6 +197,16 @@ $cats = $pdo->query("SELECT * FROM categories ORDER BY type, name")->fetchAll();
                         </a>
                     <?php endif; ?>
                 <?php endforeach; ?>
+                
+                <h6 class="mt-3">🪴 Plants</h6>
+<?php foreach ($cats as $cat): ?>
+    <?php if ($cat['type'] == 'plants'): ?>
+        <a href="products.php?cat=<?= $cat['id'] ?>"
+           class="filter-link <?= ($cat_id==$cat['id']) ? 'active':'' ?>">
+            › <?= htmlspecialchars($cat['name']) ?>
+        </a>
+    <?php endif; ?>
+<?php endforeach; ?>
             </div>
         </div>
 
@@ -216,9 +228,10 @@ $cats = $pdo->query("SELECT * FROM categories ORDER BY type, name")->fetchAll();
                 <div class="row g-3">
                     <?php foreach ($products as $p):
                         $icon = '🌱';
-                        if ($p['category_type'] == 'flowers')    $icon = '🌸';
-                        elseif ($p['category_type'] == 'vegetables') $icon = '🥦';
-                        elseif ($p['category_type'] == 'fruits')  $icon = '🍎';
+if ($p['category_type'] == 'flowers')      $icon = '🌸';
+elseif ($p['category_type'] == 'vegetables') $icon = '🥦';
+elseif ($p['category_type'] == 'fruits')   $icon = '🍎';
+elseif ($p['category_type'] == 'plants')   $icon = '🪴';
                     ?>
                     <div class="col-md-4 col-6">
                         <div class="product-card">

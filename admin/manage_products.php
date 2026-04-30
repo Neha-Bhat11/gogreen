@@ -201,13 +201,17 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY type, name")->fetch
                 </thead>
                 <tbody>
                 <?php foreach ($products as $p):
-                    $icon = '🌱';
-                    if (strpos($p['cat_name'], 'lower') !== false ||
-                        strpos(strtolower($p['cat_name']), 'flower') !== false) $icon = '🌸';
-                    elseif (strpos(strtolower($p['cat_name']), 'vegetable') !== false ||
-                            strpos(strtolower($p['cat_name']), 'leafy') !== false ||
-                            strpos(strtolower($p['cat_name']), 'creeper') !== false) $icon = '🥦';
-                    elseif (strpos(strtolower($p['cat_name']), 'fruit') !== false) $icon = '🍎';
+                   $icon = '🌱';
+if (strpos(strtolower($p['cat_name']), 'flower') !== false) $icon = '🌸';
+elseif (strpos(strtolower($p['cat_name']), 'vegetable') !== false ||
+        strpos(strtolower($p['cat_name']), 'leafy') !== false ||
+        strpos(strtolower($p['cat_name']), 'creeper') !== false ||
+        strpos(strtolower($p['cat_name']), 'root') !== false) $icon = '🥦';
+elseif (strpos(strtolower($p['cat_name']), 'fruit') !== false) $icon = '🍎';
+elseif (strpos(strtolower($p['cat_name']), 'plant') !== false ||
+        strpos(strtolower($p['cat_name']), 'succulent') !== false ||
+        strpos(strtolower($p['cat_name']), 'bonsai') !== false ||
+        strpos(strtolower($p['cat_name']), 'herb') !== false) $icon = '🪴';
                 ?>
                 <tr>
                     <td><?= $p['id'] ?></td>

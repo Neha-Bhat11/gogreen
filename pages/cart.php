@@ -129,7 +129,7 @@ $existing_orders = $stmt_fo->fetchColumn();
 <?php else: ?>
     <div class="alert alert-info mb-3">
         💡 Order <strong><?= 10 - $total_qty ?> more</strong>
-        seed packets to get 10% discount!
+        items to get 10% discount!
     </div>
 <?php endif; ?>   
 
