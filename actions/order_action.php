@@ -146,6 +146,51 @@ notifyAdminNewOrder($order_id, $order, $cart_items);
     }
     exit();
 }
+// CANCEL ORDER
+if ($action == 'cancel_order') {
+    $order_id = (int)$_POST['order_id'];
+
+    // Check order belongs to user and can be cancelled
+    $stmt = $pdo->prepare("SELECT * FROM orders 
+                            WHERE id = ? AND user_id = ?");
+    $stmt->execute([$order_id, $user_id]);
+    $order = $stmt->fetch();
+
+    if (!$order) {
+        echo json_encode(['success' => false,
+                          'message' => 'Order not found!']);
+        exit();
+    }
+
+    // Only allow cancel if Placed or Processing
+    if (!in_array($order['order_status'], ['placed', 'processing'])) {
+        echo json_encode(['success' => false,
+                          'message' => 'Order cannot be cancelled after it has been shipped!']);
+        exit();
+    }
+
+    // Restore stock for each product
+    $stmt = $pdo->prepare("SELECT * FROM order_items WHERE order_id = ?");
+    $stmt->execute([$order_id]);
+    $items = $stmt->fetchAll();
+
+    foreach ($items as $item) {
+        $stmt = $pdo->prepare("UPDATE products 
+                                SET stock = stock + ? 
+                                WHERE id = ?");
+        $stmt->execute([$item['quantity'], $item['product_id']]);
+    }
+
+    // Update order status to cancelled
+    $stmt = $pdo->prepare("UPDATE orders 
+                            SET order_status = 'cancelled' 
+                            WHERE id = ?");
+    $stmt->execute([$order_id]);
+
+    echo json_encode(['success' => true,
+                      'message' => 'Order cancelled successfully!']);
+    exit();
+}
 
 echo json_encode(['success' => false, 'message' => 'Invalid action.']);
 ?>

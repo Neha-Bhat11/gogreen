@@ -70,6 +70,7 @@ $orders = $pdo->query("SELECT o.*, u.name as user_name, u.email as user_email
         .status-processing { background: #fff8e1; color: #f57f17; }
         .status-shipped    { background: #e8f5e9; color: #2e7d32; }
         .status-delivered  { background: #1b5e20; color: white; }
+        .status-cancelled { background: #ffebee; color: #c62828; }
     </style>
 </head>
 <body>
@@ -152,6 +153,7 @@ $orders = $pdo->query("SELECT o.*, u.name as user_name, u.email as user_email
                                 <option value="processing" <?= $order['order_status']=='processing' ? 'selected':'' ?>>Processing</option>
                                 <option value="shipped"    <?= $order['order_status']=='shipped'    ? 'selected':'' ?>>Shipped</option>
                                 <option value="delivered"  <?= $order['order_status']=='delivered'  ? 'selected':'' ?>>Delivered</option>
+                                <option value="cancelled"  <?= $order['order_status']=='cancelled'  ? 'selected':'' ?>>Cancelled</option>
                             </select>
                             <button type="submit" name="update_status"
                                     class="btn btn-success btn-sm">✓</button>

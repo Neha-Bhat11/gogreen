@@ -48,6 +48,7 @@ $orders = $stmt->fetchAll();
         .status-processing { background: #fff8e1; color: #f57f17; }
         .status-shipped    { background: #e8f5e9; color: #2e7d32; }
         .status-delivered  { background: #1b5e20; color: white; }
+        .status-cancelled { background: #ffebee; color: #c62828; }
         .payment-badge {
             padding: 4px 10px; border-radius: 20px; font-size: 12px;
         }
@@ -153,6 +154,7 @@ $orders = $stmt->fetchAll();
             // Track steps
             $steps   = ['placed', 'processing', 'shipped', 'delivered'];
             $current = array_search($order['order_status'], $steps);
+            if ($current === false) $current = -1; // for cancelled
         ?>
         <div class="order-card">
             <!-- Order Header -->
@@ -224,17 +226,33 @@ $orders = $stmt->fetchAll();
                     </strong>
                 </div>
                 <div class="d-flex gap-2 flex-wrap">
-                    <?php if ($order['order_status'] == 'delivered'): ?>
-                        <button onclick="openReview(<?= $order['id'] ?>)"
-                                class="btn-review">
-                            ⭐ Write Review
-                        </button>
-                    <?php endif; ?>
-                    <a href="order_tracking.php?id=<?= $order['id'] ?>"
-                       class="btn btn-outline-success btn-sm">
-                        📍 Track Order
-                    </a>
-                </div>
+    <?php if ($order['order_status'] == 'delivered'): ?>
+        <button onclick="openReview(<?= $order['id'] ?>)"
+                class="btn-review">
+            ⭐ Write Review
+        </button>
+    <?php endif; ?>
+
+    <?php if (in_array($order['order_status'], ['placed', 'processing'])): ?>
+        <button onclick="cancelOrder(<?= $order['id'] ?>)"
+                class="btn btn-outline-danger btn-sm">
+            ❌ Cancel Order
+        </button>
+    <?php endif; ?>
+
+    <?php if ($order['order_status'] == 'cancelled'): ?>
+        <span class="badge bg-danger px-3 py-2">
+            ❌ Order Cancelled
+        </span>
+    <?php endif; ?>
+
+    <?php if ($order['order_status'] != 'cancelled'): ?>
+        <a href="order_tracking.php?id=<?= $order['id'] ?>"
+           class="btn btn-outline-success btn-sm">
+            📍 Track Order
+        </a>
+    <?php endif; ?>
+</div>
             </div>
         </div>
         <?php endforeach; ?>
@@ -268,6 +286,25 @@ $orders = $stmt->fetchAll();
 <script>
 function openReview(orderId) {
     window.location.href = 'order_tracking.php?id=' + orderId + '&review=1';
+}
+function cancelOrder(orderId) {
+    if (!confirm('Are you sure you want to cancel this order?\nThis action cannot be undone!')) {
+        return;
+    }
+    fetch('../actions/order_action.php', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: 'action=cancel_order&order_id=' + orderId
+    })
+    .then(res => res.json())
+    .then(data => {
+        if (data.success) {
+            alert('✅ Order cancelled successfully!\nYour stock has been restored.');
+            location.reload();
+        } else {
+            alert('❌ ' + (data.message || 'Cannot cancel this order.'));
+        }
+    });
 }
 </script>
 </body>
