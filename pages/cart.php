@@ -152,12 +152,22 @@ $existing_orders = $stmt_fo->fetchColumn();
                             elseif ($item['category_type'] == 'fruits')  $icon = '🍎';
                         ?>
                         <tr id="row-<?= $item['cart_id'] ?>">
-                            <td>
-                                <span class="product-icon"><?= $icon ?></span>
-                                <strong style="color:#1b5e20;">
-                                    <?= htmlspecialchars($item['name']) ?>
-                                </strong>
-                            </td>
+                           <td>
+    <?php
+    $imgPath = '../assets/images/products/' . $item['image'];
+    if ($item['image'] && file_exists($imgPath)):
+    ?>
+        <img src="<?= $imgPath ?>"
+             style="width:50px; height:50px;
+                    object-fit:cover; border-radius:8px;
+                    margin-right:8px; vertical-align:middle;">
+    <?php else: ?>
+        <span class="product-icon"><?= $icon ?></span>
+    <?php endif; ?>
+    <strong style="color:#1b5e20; vertical-align:middle;">
+        <?= htmlspecialchars($item['name']) ?>
+    </strong>
+</td> 
                             <td>₹<?= number_format($item['price'], 2) ?></td>
                             <td>
                                 <div class="d-flex align-items-center gap-1">

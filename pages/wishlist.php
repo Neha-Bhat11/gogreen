@@ -99,7 +99,18 @@ $wishlist_items = $stmt->fetchAll();
                 <div class="wish-card">
                     <a href="product_detail.php?id=<?= $item['product_id'] ?>"
                        style="text-decoration:none;">
-                        <div class="wish-img"><?= $icon ?></div>
+                        <div class="wish-img">
+    <?php
+    $imgPath = '../assets/images/products/' . $item['image'];
+    if ($item['image'] && file_exists($imgPath)):
+    ?>
+        <img src="<?= $imgPath ?>"
+             style="width:100%; height:160px;
+                    object-fit:cover; object-position:center;">
+    <?php else: ?>
+        <?= $icon ?>
+    <?php endif; ?>
+</div>
                     </a>
                     <div class="wish-body">
                         <span class="product-cat">

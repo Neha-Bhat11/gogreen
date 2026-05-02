@@ -78,11 +78,27 @@ $cats = $pdo->query("SELECT * FROM categories ORDER BY type, name")->fetchAll();
             box-shadow: 0 8px 25px rgba(0,128,0,0.15);
         }
         .product-img-placeholder {
-            width: 100%; height: 180px;
-            background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
-            display: flex; align-items: center;
-            justify-content: center; font-size: 60px;
-        }
+    width: 100%;
+    height: 220px;
+    background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 60px;
+    overflow: hidden;
+}
+
+.product-img-placeholder img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+    object-position: center;
+    transition: transform 0.3s ease;
+}
+
+.product-img-placeholder img:hover {
+    transform: scale(1.05);
+}
         .product-body { padding: 15px; }
         .product-name { color: #1b5e20; font-weight: 600; font-size: 15px; }
         .product-price { color: #e65100; font-weight: 700; font-size: 18px; }
@@ -240,8 +256,9 @@ elseif ($p['category_type'] == 'plants')   $icon = '🪴';
                                     <?php
                                     $imgPath = '../assets/images/products/' . $p['image'];
                                     if ($p['image'] && file_exists($imgPath)) {
-                                        echo '<img src="'.$imgPath.'" style="width:100%;
-                                              height:180px; object-fit:cover;">';
+    echo '<img src="'.$imgPath.'" style="width:100%;
+          height:220px; object-fit:cover;
+          object-position:center;">';
                                     } else {
                                         echo $icon;
                                     }
