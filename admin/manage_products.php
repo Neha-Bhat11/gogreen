@@ -53,17 +53,56 @@ if (isset($_POST['add_product'])) {
 if (isset($_GET['delete'])) {
     $id = (int)$_GET['delete'];
 
-    // Check if product has orders
-    $stmt = $pdo->prepare("SELECT COUNT(*) FROM order_items WHERE product_id = ?");
-    $stmt->execute([$id]);
-    $order_count = $stmt->fetchColumn();
+    try {
+        // Get image path before deleting
+        $stmt = $pdo->prepare("SELECT image FROM products WHERE id = ?");
+        $stmt->execute([$id]);
+        $product = $stmt->fetch();
 
-    if ($order_count > 0) {
-        $pdo->prepare("UPDATE products SET stock = 0 WHERE id = ?")->execute([$id]);
-        header("Location: manage_products.php?success=deactivated");
-    } else {
+        // Step 1 - Remove from wishlists
+        $pdo->prepare("DELETE FROM wishlist WHERE product_id = ?")->execute([$id]);
+
+        // Step 2 - Remove from carts
+        $pdo->prepare("DELETE FROM cart WHERE product_id = ?")->execute([$id]);
+
+        // Step 3 - Remove reviews
+        $pdo->prepare("DELETE FROM reviews WHERE product_id = ?")->execute([$id]);
+
+        // Step 4 - Get all order_items for this product
+        $stmt = $pdo->prepare("SELECT DISTINCT order_id FROM order_items WHERE product_id = ?");
+        $stmt->execute([$id]);
+        $affected_orders = $stmt->fetchAll(PDO::FETCH_COLUMN);
+
+        // Step 5 - Delete order items for this product
+        $pdo->prepare("DELETE FROM order_items WHERE product_id = ?")->execute([$id]);
+
+        // Step 6 - Delete orders that now have NO items
+        if (!empty($affected_orders)) {
+            foreach ($affected_orders as $order_id) {
+                $stmt = $pdo->prepare("SELECT COUNT(*) FROM order_items WHERE order_id = ?");
+                $stmt->execute([$order_id]);
+                $remaining = $stmt->fetchColumn();
+                if ($remaining == 0) {
+                    $pdo->prepare("DELETE FROM orders WHERE id = ?")->execute([$order_id]);
+                }
+            }
+        }
+
+        // Step 7 - Delete the product itself
         $pdo->prepare("DELETE FROM products WHERE id = ?")->execute([$id]);
+
+        // Step 8 - Delete image file if exists
+        if ($product && $product['image']) {
+            $imgFile = "../assets/images/products/" . $product['image'];
+            if (file_exists($imgFile)) {
+                unlink($imgFile);
+            }
+        }
+
         header("Location: manage_products.php?success=deleted");
+
+    } catch (Exception $e) {
+        header("Location: manage_products.php?error=" . urlencode($e->getMessage()));
     }
     exit();
 }
@@ -76,8 +115,44 @@ if (isset($_POST['update_product'])) {
     $price       = (float)$_POST['price'];
     $stock       = (int)$_POST['stock'];
 
-    $stmt = $pdo->prepare("UPDATE products SET name=?, description=?, price=?, stock=? WHERE id=?");
-    $stmt->execute([$name, $description, $price, $stock, $id]);
+    // Get current image
+    $stmt = $pdo->prepare("SELECT image, category_id FROM products WHERE id = ?");
+    $stmt->execute([$id]);
+    $current = $stmt->fetch();
+    $image = $current['image'];
+
+    // Handle new image upload
+    if (!empty($_FILES['edit_image']['name'])) {
+        // Get category type for folder
+        $stmt = $pdo->prepare("SELECT type FROM categories WHERE id = ?");
+        $stmt->execute([$current['category_id']]);
+        $cat_type = $stmt->fetchColumn();
+
+        $ext      = pathinfo($_FILES['edit_image']['name'], PATHINFO_EXTENSION);
+        $filename = strtolower(str_replace(' ', '_', $name)) . '.' . $ext;
+        $upload_dir = "../assets/images/products/$cat_type/";
+
+        if (!is_dir($upload_dir)) mkdir($upload_dir, 0777, true);
+
+        // Delete old image if exists
+        if ($image && file_exists("../assets/images/products/" . $image)) {
+            unlink("../assets/images/products/" . $image);
+        }
+
+        move_uploaded_file($_FILES['edit_image']['tmp_name'], $upload_dir . $filename);
+        $image = "$cat_type/$filename";
+    }
+
+    // Remove image if checkbox checked
+    if (isset($_POST['remove_image']) && $_POST['remove_image'] == '1') {
+        if ($image && file_exists("../assets/images/products/" . $image)) {
+            unlink("../assets/images/products/" . $image);
+        }
+        $image = null;
+    }
+
+    $stmt = $pdo->prepare("UPDATE products SET name=?, description=?, price=?, stock=?, image=? WHERE id=?");
+    $stmt->execute([$name, $description, $price, $stock, $image, $id]);
     header("Location: manage_products.php?success=updated");
     exit();
 }
@@ -174,16 +249,21 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY type, name")->fetch
     </div>
 
     <?php if (isset($_GET['success'])): ?>
-        <div class="alert alert-success">
-            <?php
-            if ($_GET['success'] == 'added')          echo '✅ Product added successfully!';
-            elseif ($_GET['success'] == 'updated')    echo '✅ Product updated successfully!';
-            elseif ($_GET['success'] == 'deleted')    echo '✅ Product deleted successfully!';
-            elseif ($_GET['success'] == 'deactivated') echo '⚠️ Product has existing orders — stock set to 0 instead of deleting.';
-            elseif ($_GET['success'] == 'category_added') echo '✅ Category added successfully!';
-            ?>
-        </div>
-    <?php endif; ?>
+    <div class="alert alert-success">
+        <?php
+        if ($_GET['success'] == 'added')          echo '✅ Product added successfully!';
+        elseif ($_GET['success'] == 'updated')    echo '✅ Product updated successfully!';
+        elseif ($_GET['success'] == 'deleted')    echo '✅ Product and all related data deleted successfully!';
+        elseif ($_GET['success'] == 'deactivated') echo '⚠️ Product has existing orders — stock set to 0.';
+        elseif ($_GET['success'] == 'category_added') echo '✅ Category added successfully!';
+        ?>
+    </div>
+<?php endif; ?>
+<?php if (isset($_GET['error'])): ?>
+    <div class="alert alert-danger">
+        ❌ Error: <?= htmlspecialchars($_GET['error']) ?>
+    </div>
+<?php endif; ?>
 
     <div class="table-box">
         <div class="table-responsive">
@@ -324,18 +404,21 @@ elseif (strpos(strtolower($p['cat_name']), 'plant') !== false ||
                         data-bs-dismiss="modal"></button>
             </div>
             <div class="modal-body">
-                <form method="POST">
+                <form method="POST" enctype="multipart/form-data">
                     <input type="hidden" name="product_id" id="edit_id">
+
                     <div class="mb-3">
                         <label class="form-label">Product Name</label>
                         <input type="text" name="name" id="edit_name"
                                class="form-control" required>
                     </div>
+
                     <div class="mb-3">
                         <label class="form-label">Description</label>
                         <textarea name="description" id="edit_desc"
                                   class="form-control" rows="3"></textarea>
                     </div>
+
                     <div class="row g-3">
                         <div class="col-6">
                             <label class="form-label">Price (₹)</label>
@@ -348,8 +431,49 @@ elseif (strpos(strtolower($p['cat_name']), 'plant') !== false ||
                                    class="form-control" required>
                         </div>
                     </div>
+
+                    <!-- Current Image Preview -->
+                    <div class="mb-3 mt-3" id="current_img_box">
+                        <label class="form-label">Current Image</label>
+                        <div id="current_img_preview"
+                             style="background:#f5f5f5; border-radius:8px;
+                                    padding:10px; text-align:center;">
+                        </div>
+                        <div class="form-check mt-2">
+                            <input type="checkbox" name="remove_image"
+                                   value="1" class="form-check-input"
+                                   id="remove_img_check">
+                            <label class="form-check-label text-danger"
+                                   for="remove_img_check">
+                                🗑️ Remove current image
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- New Image Upload -->
+                    <div class="mb-3">
+                        <label class="form-label">Upload New Image</label>
+                        <input type="file" name="edit_image"
+                               class="form-control" accept="image/*"
+                               onchange="previewNewImage(this)">
+                        <small class="text-muted">
+                            Leave empty to keep current image
+                        </small>
+                    </div>
+
+                    <!-- New image preview -->
+                    <div id="new_img_preview" style="display:none;
+                         text-align:center; margin-bottom:10px;">
+                        <img id="new_img_tag"
+                             style="max-height:120px; border-radius:8px;
+                                    object-fit:cover;">
+                        <div style="font-size:12px; color:#777; margin-top:5px;">
+                            New image preview
+                        </div>
+                    </div>
+
                     <button type="submit" name="update_product"
-                            class="btn btn-primary w-100 mt-3">
+                            class="btn btn-primary w-100">
                         Update Product
                     </button>
                 </form>
@@ -357,7 +481,6 @@ elseif (strpos(strtolower($p['cat_name']), 'plant') !== false ||
         </div>
     </div>
 </div>
-
 <!-- ADD CATEGORY MODAL -->
 <div class="modal fade" id="addCatModal" tabindex="-1">
     <div class="modal-dialog">
@@ -418,7 +541,33 @@ function editProduct(p) {
     document.getElementById('edit_desc').value  = p.description;
     document.getElementById('edit_price').value = p.price;
     document.getElementById('edit_stock').value = p.stock;
+
+    // Reset checkboxes and previews
+    document.getElementById('remove_img_check').checked = false;
+    document.getElementById('new_img_preview').style.display = 'none';
+
+    // Show current image preview
+    var preview = document.getElementById('current_img_preview');
+    if (p.image) {
+        preview.innerHTML = '<img src="../assets/images/products/' + p.image + '"' +
+            ' style="max-height:100px; border-radius:8px; object-fit:cover;">' +
+            '<div style="font-size:12px;color:#777;margin-top:5px;">' + p.image + '</div>';
+    } else {
+        preview.innerHTML = '<div style="color:#999; font-size:13px; padding:10px;">No image — using default icon</div>';
+    }
+
     new bootstrap.Modal(document.getElementById('editModal')).show();
+}
+
+function previewNewImage(input) {
+    if (input.files && input.files[0]) {
+        var reader = new FileReader();
+        reader.onload = function(e) {
+            document.getElementById('new_img_tag').src = e.target.result;
+            document.getElementById('new_img_preview').style.display = 'block';
+        };
+        reader.readAsDataURL(input.files[0]);
+    }
 }
 </script>
 </body>
