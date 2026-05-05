@@ -1,5 +1,6 @@
 <?php
-$host     = "localhost";
+//$host     = "localhost";//
+$host = "127.0.0.1";
 $dbname   = "gogreen_db";
 $username = "root";
 $password = "";  // XAMPP default has no password

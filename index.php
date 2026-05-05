@@ -84,6 +84,9 @@ if (isset($_SESSION['user_id'])) {
                     <label class="form-label">Email or Mobile Number</label>
                     <input type="text" name="login_id" id="login_id" class="form-control"
                            placeholder="Enter email or mobile number" required>
+                    <small class="text-muted">
+                         📧 OTP will be sent to your registered email address
+                    </small>
                 </div>
 
                 <!-- Password -->

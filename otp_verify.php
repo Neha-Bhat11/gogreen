@@ -48,10 +48,19 @@ if (!isset($_SESSION['otp_user_id'])) {
 
             <div class="brand-title">🌱 GreenLife</div>
             <h5 class="mt-3 mb-1">OTP Verification</h5>
-            <p class="text-muted" style="font-size:13px;">
-                We sent a 6-digit OTP to your registered email.<br>
-                Valid for <span id="timer">5:00</span> minutes.
-            </p>
+       <p style="color:#777; font-size:13px;">
+    We sent a 6-digit OTP to your <strong>registered email address</strong>.<br>
+    <?php
+    if (isset($_SESSION['otp_user_email'])) {
+        $email = $_SESSION['otp_user_email'];
+        // Show masked email like: ab***@gmail.com
+        $parts = explode('@', $email);
+        $masked = substr($parts[0], 0, 2) . '***@' . $parts[1];
+        echo "OTP sent to: <strong>$masked</strong><br>";
+    }
+    ?>
+    Valid for <span id="timer">5:00</span> minutes.
+</p>    
 
             <?php if (isset($_SESSION['otp_error'])): ?>
                 <div class="alert alert-danger"><?= $_SESSION['otp_error']; unset($_SESSION['otp_error']); ?></div>

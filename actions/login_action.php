@@ -48,10 +48,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Send OTP email
     sendOTPMail($user['email'], $user['name'], $otp, 'login');
 
-    // Store user_id temporarily for OTP verification
-    $_SESSION['otp_user_id'] = $user['id'];
-    $_SESSION['login_success'] = "OTP sent to your registered email. Valid for 5 minutes.";
-
+   // Store user_id and email temporarily for OTP verification
+$_SESSION['otp_user_id']    = $user['id'];
+$_SESSION['otp_user_email'] = $user['email'];
+$_SESSION['login_success']  = "OTP sent to your registered email. Valid for 5 minutes."; 
     header("Location: ../otp_verify.php");
     exit();
 }
