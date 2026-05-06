@@ -176,9 +176,7 @@ $cats = $pdo->query("SELECT * FROM categories ORDER BY type, name")->fetchAll();
        class="type-tab <?= ($type=='vegetables') ? 'active' : '' ?>">🥦 Vegetables</a>
     <a href="products.php?type=fruits"
        class="type-tab <?= ($type=='fruits') ? 'active' : '' ?>">🍎 Fruits</a>
-    <a href="products.php?type=plants"
-       class="type-tab <?= ($type=='plants') ? 'active' : '' ?>">🪴 Plants</a>
-</div>
+    </div>
 
     <div class="row">
         <!-- SIDEBAR -->
@@ -214,15 +212,8 @@ $cats = $pdo->query("SELECT * FROM categories ORDER BY type, name")->fetchAll();
                     <?php endif; ?>
                 <?php endforeach; ?>
                 
-                <h6 class="mt-3">🪴 Plants</h6>
-<?php foreach ($cats as $cat): ?>
-    <?php if ($cat['type'] == 'plants'): ?>
-        <a href="products.php?cat=<?= $cat['id'] ?>"
-           class="filter-link <?= ($cat_id==$cat['id']) ? 'active':'' ?>">
-            › <?= htmlspecialchars($cat['name']) ?>
-        </a>
-    <?php endif; ?>
-<?php endforeach; ?>
+                
+   
             </div>
         </div>
 
@@ -247,7 +238,7 @@ $cats = $pdo->query("SELECT * FROM categories ORDER BY type, name")->fetchAll();
 if ($p['category_type'] == 'flowers')      $icon = '🌸';
 elseif ($p['category_type'] == 'vegetables') $icon = '🥦';
 elseif ($p['category_type'] == 'fruits')   $icon = '🍎';
-elseif ($p['category_type'] == 'plants')   $icon = '🪴';
+
                     ?>
                     <div class="col-md-4 col-6">
                         <div class="product-card">

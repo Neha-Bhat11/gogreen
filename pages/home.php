@@ -62,13 +62,7 @@ require_once '../includes/db.php';
                 <p>Seasonal and variety fruit seeds for your garden</p>
             </a>
         </div>
-         <div class="col-md-3 col-12">
-    <a href="products.php?type=plants" class="category-card">
-        <div class="category-icon">🪴</div>
-        <h5>Small Plants</h5>
-        <p>Indoor, outdoor, succulents, medicinal and more</p>
-    </a>
-</div>
+         
     </div>
 
     <!-- WHY CHOOSE US -->
