@@ -6,6 +6,23 @@ require_once __DIR__ . '/../vendor/phpmailer/src/Exception.php';
 require_once __DIR__ . '/../vendor/phpmailer/src/PHPMailer.php';
 require_once __DIR__ . '/../vendor/phpmailer/src/SMTP.php';
 
+function getMailer() {
+    require_once __DIR__ . '/../vendor/phpmailer/src/PHPMailer.php';
+    require_once __DIR__ . '/../vendor/phpmailer/src/SMTP.php';
+    require_once __DIR__ . '/../vendor/phpmailer/src/Exception.php';
+
+    $mail = new PHPMailer\PHPMailer\PHPMailer(true);
+    $mail->isSMTP();
+    $mail->Host       = 'smtp.gmail.com';
+    $mail->SMTPAuth   = true;
+    $mail->Username   = 'kpneha77@gmail.com'; // your Gmail
+    $mail->Password   = 'hjbm cfwc fzuw cpyx';    // your app password
+    $mail->SMTPSecure = 'tls';
+    $mail->Port       = 587;
+    $mail->setFrom('kpneha77@gmail.com', 'GreenLife');
+    return $mail;
+}
+
 function sendOTPMail($toEmail, $toName, $otp, $type = 'login') {
     $mail = new PHPMailer(true);
     try {

@@ -129,8 +129,7 @@ if (isset($_SESSION['user_id'])) {
                 <button type="submit" class="btn btn-green mt-2">Register</button>
 
                 <div class="text-center mt-3">
-                    <small>Already have an account? <a href="index.php">Login here</a></small>
-                </div>
+                    <small>Already have an account?<a href="index.php?from=landing">Login here</a> </small>
 
             </form>
         </div>
