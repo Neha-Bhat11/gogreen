@@ -64,13 +64,13 @@ function notifyAdminNewOrder($order_id, $order, $items) {
         $mail->isSMTP();
         $mail->Host       = 'smtp.gmail.com';
         $mail->SMTPAuth   = true;
-        $mail->Username   = 'your_email@gmail.com'; // ← your gmail
-        $mail->Password   = 'your_app_password';    // ← your app password
+        $mail->Username   = 'kpneha77@gmail.com'; // ← your gmail
+        $mail->Password   = 'hjbm cfwc fzuw cpyx';    // ← your app password
         $mail->SMTPSecure = 'tls';
         $mail->Port       = 587;
 
-        $mail->setFrom('your_email@gmail.com', 'GreenLife');
-        $mail->addAddress('your_email@gmail.com'); // ← admin email
+        $mail->setFrom('kpneha77@gmail.com', 'GreenLife');
+        $mail->addAddress('kpneha77@gmail.com'); // ← admin email
         $mail->isHTML(true);
         $mail->Subject = '🌱 New Order #' . str_pad($order_id, 6, '0', STR_PAD_LEFT);
 
