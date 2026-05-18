@@ -9,6 +9,7 @@ if (!file_exists(__DIR__ . '/../vendor/TCPDF-main/tcpdf.php')) {
     return;
 }
 
+require_once __DIR__ . '/send_mail.php';
 require_once __DIR__ . '/../vendor/TCPDF-main/tcpdf.php';
 
 function generateInvoicePDF($order, $items, $user) {

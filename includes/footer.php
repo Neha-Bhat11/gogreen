@@ -29,10 +29,10 @@
             <div class="col-md-4">
                 <h6 style="color:white; font-weight:700;">Contact Us</h6>
                 <p style="font-size:13px; color:#a5d6a7;">
-                    📞 Helpline: <strong style="color:white;">+91 98765 43210</strong><br>
+                    📞 Helpline: <strong style="color:white;">+91 9123123567</strong><br>
                     ✉️ Email: <strong style="color:white;">support@greenlife.com</strong><br>
                     📍 Karnataka, India<br>
-                    🕐 Mon-Sat: 9AM - 6PM
+                    🕐 24/7 Available
                 </p>
                 <div class="mt-2">
                     <span style="background:#2e7d32; color:white; padding:5px 10px;

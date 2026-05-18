@@ -25,6 +25,21 @@ if ($action == 'count') {
 if ($action == 'add') {
     $product_id = (int)$_POST['product_id'];
 
+    // CHECK STOCK FIRST
+    $stmt = $pdo->prepare("SELECT stock FROM products WHERE id = ?");
+    $stmt->execute([$product_id]);
+    $product = $stmt->fetch();
+
+    if (!$product || $product['stock'] <= 0) {
+        echo json_encode([
+            'success' => false,
+            'message' => '❌ Sorry! This product is out of stock.'
+        ]);
+        exit();
+    }
+    
+    
+
     // Check if already in cart
     $stmt = $pdo->prepare("SELECT id, quantity FROM cart WHERE user_id = ? AND product_id = ?");
     $stmt->execute([$user_id, $product_id]);

@@ -17,7 +17,7 @@ function getMailer() {
     $mail->SMTPAuth   = true;
     $mail->Username   = 'kpneha77@gmail.com'; // your Gmail
     $mail->Password   = 'hjbm cfwc fzuw cpyx';    // your app password
-    $mail->SMTPSecure = 'tls';
+    $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
     $mail->Port       = 587;
     $mail->setFrom('kpneha77@gmail.com', 'GreenLife');
     return $mail;

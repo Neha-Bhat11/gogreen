@@ -9,7 +9,7 @@ $type   = isset($_GET['type'])   ? $_GET['type']   : '';
 $cat_id = isset($_GET['cat'])    ? $_GET['cat']    : '';
 $search = isset($_GET['search']) ? trim($_GET['search']) : '';
 
-// Build query
+// Build query — show ALL products including out of stock
 $query  = "SELECT p.*, c.name as category_name, c.type as category_type
            FROM products p
            JOIN categories c ON p.category_id = c.id
@@ -30,7 +30,7 @@ if ($search) {
     $params[] = "%$search%";
 }
 
-$query .= " ORDER BY p.id DESC";
+$query .= " ORDER BY p.stock DESC, p.id DESC";
 $stmt = $pdo->prepare($query);
 $stmt->execute($params);
 $products = $stmt->fetchAll();
@@ -72,33 +72,55 @@ $cats = $pdo->query("SELECT * FROM categories ORDER BY type, name")->fetchAll();
             background: white; border-radius: 15px; overflow: hidden;
             box-shadow: 0 3px 15px rgba(0,0,0,0.08);
             transition: transform 0.2s, box-shadow 0.2s; height: 100%;
+            position: relative;
         }
         .product-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 8px 25px rgba(0,128,0,0.15);
         }
+
+        /* OUT OF STOCK overlay */
+        .out-of-stock-overlay {
+            position: absolute;
+            top: 10px; left: 10px;
+            background: #c62828;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            z-index: 10;
+            letter-spacing: 0.5px;
+        }
+
+        /* Grayscale image when out of stock */
+        .out-of-stock-img {
+            filter: grayscale(70%);
+            opacity: 0.7;
+        }
+
         .product-img-placeholder {
-    width: 100%;
-    height: 220px;
-    background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 60px;
-    overflow: hidden;
-}
+            width: 100%;
+            height: 220px;
+            background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 60px;
+            overflow: hidden;
+            position: relative;
+        }
+        .product-img-placeholder img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            object-position: center;
+            transition: transform 0.3s ease;
+        }
+        .product-img-placeholder img:hover {
+            transform: scale(1.05);
+        }
 
-.product-img-placeholder img {
-    width: 100%;
-    height: 220px;
-    object-fit: cover;
-    object-position: center;
-    transition: transform 0.3s ease;
-}
-
-.product-img-placeholder img:hover {
-    transform: scale(1.05);
-}
         .product-body { padding: 15px; }
         .product-name { color: #1b5e20; font-weight: 600; font-size: 15px; }
         .product-price { color: #e65100; font-weight: 700; font-size: 18px; }
@@ -107,13 +129,44 @@ $cats = $pdo->query("SELECT * FROM categories ORDER BY type, name")->fetchAll();
             padding: 3px 8px; border-radius: 20px;
             display: inline-block; margin-bottom: 8px;
         }
+
+        /* Stock status */
+        .stock-available {
+            color: #2e7d32; font-size: 12px; font-weight: 600;
+        }
+        .stock-low {
+            color: #f57f17; font-size: 12px; font-weight: 600;
+        }
+        .stock-out {
+            background: #ffebee; color: #c62828;
+            padding: 5px 10px; border-radius: 8px;
+            font-size: 12px; font-weight: 700;
+            text-align: center; margin: 8px 0;
+            border: 1px solid #ffcdd2;
+        }
+
         .btn-add-cart {
             background: #2e7d32; color: white; border: none;
             border-radius: 8px; padding: 7px 12px;
             font-size: 13px; width: 100%; margin-top: 8px;
-            cursor: pointer;
+            cursor: pointer; transition: background 0.2s;
         }
         .btn-add-cart:hover { background: #1b5e20; color: white; }
+
+        /* Disabled cart button */
+        .btn-add-cart:disabled,
+        .btn-add-cart-disabled {
+            background: #bdbdbd !important;
+            color: #757575 !important;
+            border: none;
+            border-radius: 8px;
+            padding: 7px 12px;
+            font-size: 13px;
+            width: 100%;
+            margin-top: 8px;
+            cursor: not-allowed !important;
+        }
+
         .btn-wishlist {
             background: #fff; color: #e53935;
             border: 1px solid #e53935; border-radius: 8px;
@@ -132,7 +185,6 @@ $cats = $pdo->query("SELECT * FROM categories ORDER BY type, name")->fetchAll();
             background: #1b5e20; color: white; border-color: #1b5e20;
         }
 
-        /* Mobile sidebar hidden by default */
         @media (max-width: 991px) {
             .sidebar-filter { margin-bottom: 20px; }
         }
@@ -168,14 +220,14 @@ $cats = $pdo->query("SELECT * FROM categories ORDER BY type, name")->fetchAll();
 
     <!-- TYPE TABS -->
     <div class="d-flex gap-2 flex-wrap mb-4">
-    <a href="products.php"
-       class="type-tab <?= (!$type) ? 'active' : '' ?>">🌿 All</a>
-    <a href="products.php?type=flowers"
-       class="type-tab <?= ($type=='flowers') ? 'active' : '' ?>">🌸 Flowers</a>
-    <a href="products.php?type=vegetables"
-       class="type-tab <?= ($type=='vegetables') ? 'active' : '' ?>">🥦 Vegetables</a>
-    <a href="products.php?type=fruits"
-       class="type-tab <?= ($type=='fruits') ? 'active' : '' ?>">🍎 Fruits</a>
+        <a href="products.php"
+           class="type-tab <?= (!$type) ? 'active' : '' ?>">🌿 All</a>
+        <a href="products.php?type=flowers"
+           class="type-tab <?= ($type=='flowers') ? 'active' : '' ?>">🌸 Flowers</a>
+        <a href="products.php?type=vegetables"
+           class="type-tab <?= ($type=='vegetables') ? 'active' : '' ?>">🥦 Vegetables</a>
+        <a href="products.php?type=fruits"
+           class="type-tab <?= ($type=='fruits') ? 'active' : '' ?>">🍎 Fruits</a>
     </div>
 
     <div class="row">
@@ -211,9 +263,8 @@ $cats = $pdo->query("SELECT * FROM categories ORDER BY type, name")->fetchAll();
                         </a>
                     <?php endif; ?>
                 <?php endforeach; ?>
+
                 
-                
-   
             </div>
         </div>
 
@@ -235,27 +286,48 @@ $cats = $pdo->query("SELECT * FROM categories ORDER BY type, name")->fetchAll();
                 <div class="row g-3">
                     <?php foreach ($products as $p):
                         $icon = '🌱';
-if ($p['category_type'] == 'flowers')      $icon = '🌸';
-elseif ($p['category_type'] == 'vegetables') $icon = '🥦';
-elseif ($p['category_type'] == 'fruits')   $icon = '🍎';
+                        if ($p['category_type'] == 'flowers')        $icon = '🌸';
+                        elseif ($p['category_type'] == 'vegetables')  $icon = '🥦';
+                        elseif ($p['category_type'] == 'fruits')      $icon = '🍎';
+                        elseif ($p['category_type'] == 'plants')      $icon = '🪴';
 
+                        $isOutOfStock = ($p['stock'] <= 0);
+                        $isLowStock   = ($p['stock'] > 0 && $p['stock'] <= 5);
                     ?>
                     <div class="col-md-4 col-6">
                         <div class="product-card">
+
+                            <!-- OUT OF STOCK BADGE -->
+                            <?php if ($isOutOfStock): ?>
+                                <div class="out-of-stock-overlay">
+                                    ❌ Sold Out
+                                </div>
+                            <?php elseif ($isLowStock): ?>
+                                <div class="out-of-stock-overlay"
+                                     style="background:#f57f17;">
+                                    ⚡ Only <?= $p['stock'] ?> left!
+                                </div>
+                            <?php endif; ?>
+
                             <a href="product_detail.php?id=<?= $p['id'] ?>">
                                 <div class="product-img-placeholder">
                                     <?php
                                     $imgPath = '../assets/images/products/' . $p['image'];
                                     if ($p['image'] && file_exists($imgPath)) {
-    echo '<img src="'.$imgPath.'" style="width:100%;
-          height:220px; object-fit:cover;
-          object-position:center;">';
+                                        echo '<img src="' . $imgPath . '"
+                                                   class="' . ($isOutOfStock ? 'out-of-stock-img' : '') . '"
+                                                   style="width:100%; height:220px;
+                                                          object-fit:cover;
+                                                          object-position:center;">';
                                     } else {
-                                        echo $icon;
+                                        echo '<span class="' .
+                                             ($isOutOfStock ? 'out-of-stock-img' : '') .
+                                             '">' . $icon . '</span>';
                                     }
                                     ?>
                                 </div>
                             </a>
+
                             <div class="product-body">
                                 <span class="product-cat">
                                     <?= htmlspecialchars($p['category_name']) ?>
@@ -266,13 +338,44 @@ elseif ($p['category_type'] == 'fruits')   $icon = '🍎';
                                 <div class="product-price mt-1">
                                     ₹<?= number_format($p['price'], 2) ?>
                                 </div>
-                                <small style="color:#999;">
-                                    Stock: <?= $p['stock'] ?> packets
-                                </small>
-                                <button onclick="addToCart(<?= $p['id'] ?>)"
-                                        class="btn-add-cart">
-                                    <i class="bi bi-cart-plus"></i> Add to Cart
-                                </button>
+
+                                <!-- STOCK STATUS -->
+                                <?php if ($isOutOfStock): ?>
+                                    <div class="stock-out">
+                                        ❌ Out of Stock — Currently Unavailable
+                                    </div>
+                                <?php elseif ($isLowStock): ?>
+                                    <small class="stock-low">
+                                        ⚡ Only <?= $p['stock'] ?> packets left!
+                                    </small>
+                                <?php else: ?>
+                                    <small class="stock-available">
+                                        <i class="bi bi-check-circle-fill"></i>
+                                        <?= $p['stock'] ?> packets available
+                                    </small>
+                                <?php endif; ?>
+
+                                <!-- ADD TO CART BUTTON -->
+                                <?php if ($isOutOfStock): ?>
+                                    <button class="btn-add-cart-disabled"
+                                            disabled style="display:block;
+                                            width:100%; margin-top:8px;
+                                            padding:7px 12px; border:none;
+                                            border-radius:8px; font-size:13px;
+                                            background:#e0e0e0; color:#9e9e9e;
+                                            cursor:not-allowed;">
+                                        <i class="bi bi-x-circle"></i>
+                                        Out of Stock
+                                    </button>
+                                <?php else: ?>
+                                    <button onclick="addToCart(<?= $p['id'] ?>)"
+                                            class="btn-add-cart">
+                                        <i class="bi bi-cart-plus"></i>
+                                        Add to Cart
+                                    </button>
+                                <?php endif; ?>
+
+                                <!-- WISHLIST BUTTON always visible -->
                                 <button onclick="addToWishlist(<?= $p['id'] ?>)"
                                         class="btn-wishlist">
                                     <i class="bi bi-heart"></i> Wishlist
@@ -300,11 +403,15 @@ function addToCart(productId) {
     .then(res => res.json())
     .then(data => {
         if (data.success) {
+            // Update cart count in header
+            const badge = document.getElementById('cart-count');
+            if (badge) badge.textContent = parseInt(badge.textContent || 0) + 1;
             alert('✅ Added to cart!');
         } else {
             alert(data.message || 'Could not add to cart.');
         }
-    });
+    })
+    .catch(() => alert('Something went wrong. Please try again.'));
 }
 
 function addToWishlist(productId) {
@@ -320,7 +427,8 @@ function addToWishlist(productId) {
         } else {
             alert(data.message || 'Could not add to wishlist.');
         }
-    });
+    })
+    .catch(() => alert('Something went wrong. Please try again.'));
 }
 </script>
 </body>
