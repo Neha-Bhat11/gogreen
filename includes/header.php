@@ -9,7 +9,7 @@ if (isset($_SESSION['user_id'])) {
 ?>
 <nav class="navbar navbar-expand-lg">
     <div class="container">
-        <a class="navbar-brand" href="<?= $base ?>pages/home.php">🌱 GreenLife</a>
+        <a class="navbar-brand" href="<?= $base ?>pages/home.php">🌱 Green Life</a>
         <button class="navbar-toggler" type="button"
                 data-bs-toggle="collapse" data-bs-target="#navMenu">
             <span class="navbar-toggler-icon"></span>

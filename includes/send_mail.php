@@ -19,7 +19,7 @@ function getMailer() {
     $mail->Password   = 'hjbm cfwc fzuw cpyx';    // your app password
     $mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
     $mail->Port       = 587;
-    $mail->setFrom('kpneha77@gmail.com', 'GreenLife');
+    $mail->setFrom('kpneha77@gmail.com', 'Green Life');
     return $mail;
 }
 
@@ -34,17 +34,17 @@ function sendOTPMail($toEmail, $toName, $otp, $type = 'login') {
         $mail->SMTPSecure = 'tls';
         $mail->Port       = 587;
 
-        $mail->setFrom('kpneha77@gmail.com', 'GreenLife');
+        $mail->setFrom('kpneha77@gmail.com', 'Green Life');
         $mail->addAddress($toEmail, $toName);
         $mail->isHTML(true);
 
         if ($type == 'register') {
-            $mail->Subject = 'Welcome to GreenLife - Registration Successful';
+            $mail->Subject = 'Welcome to Green Life - Registration Successful';
             $mail->Body    = "<h2>Welcome, $toName!</h2>
                               <p>You have successfully registered on <b>GreenLife</b>.</p>
                               <p>Start exploring our plant seeds collection today! 🌱</p>";
         } else {
-            $mail->Subject = 'GreenLife - Your OTP Code';
+            $mail->Subject = 'Green Life - Your OTP Code';
             $mail->Body    = "<h2>Hello, $toName!</h2>
                               <p>Your OTP for login is: <b style='font-size:24px;color:green;'>$otp</b></p>
                               <p>This OTP is valid for <b>5 minutes</b>.</p>
@@ -69,7 +69,7 @@ function notifyAdminNewOrder($order_id, $order, $items) {
         $mail->SMTPSecure = 'tls';
         $mail->Port       = 587;
 
-        $mail->setFrom('kpneha77@gmail.com', 'GreenLife');
+        $mail->setFrom('kpneha77@gmail.com', 'Green Life');
         $mail->addAddress('kpneha77@gmail.com'); // ← admin email
         $mail->isHTML(true);
         $mail->Subject = '🌱 New Order #' . str_pad($order_id, 6, '0', STR_PAD_LEFT);

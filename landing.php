@@ -42,7 +42,7 @@ $products = $stmt->fetchAll();
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GreenLife — Plant Seeds & Small Plants</title>
+    <title>Green Life — Plant Seeds & Small Plants</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <style>
@@ -402,7 +402,7 @@ $products = $stmt->fetchAll();
 
 <!-- NAVBAR -->
 <nav class="navbar-main">
-    <a href="landing.php" class="brand-name">🌱 Green<span>Life</span></a>
+    <a href="landing.php" class="brand-name">🌱 Green<span> Life</span></a>
 
     <!-- Search -->
     <form class="search-bar d-flex" method="GET" action="landing.php">
@@ -450,7 +450,7 @@ $products = $stmt->fetchAll();
     <a href="landing.php?type=flowers" class="type-tab <?= ($type=='flowers') ? 'active' : '' ?>">🌸 Flowers</a>
     <a href="landing.php?type=vegetables" class="type-tab <?= ($type=='vegetables') ? 'active' : '' ?>">🥦 Vegetables</a>
     <a href="landing.php?type=fruits" class="type-tab <?= ($type=='fruits') ? 'active' : '' ?>">🍎 Fruits</a>
-    <a href="landing.php?type=plants" class="type-tab <?= ($type=='plants') ? 'active' : '' ?>">🪴 Plants</a>
+
 </div>
 
 <!-- PRODUCTS SECTION -->
@@ -461,7 +461,7 @@ $products = $stmt->fetchAll();
         elseif ($type == 'flowers') echo '🌸 Flower Seeds';
         elseif ($type == 'vegetables') echo '🥦 Vegetable Seeds';
         elseif ($type == 'fruits') echo '🍎 Fruit Seeds';
-        elseif ($type == 'plants') echo '🪴 Small Plants';
+       
         else echo '🌱 All Products';
         ?>
     </h2>
@@ -484,7 +484,7 @@ $products = $stmt->fetchAll();
                 if ($p['cat_type'] == 'flowers') $icon = '🌸';
                 elseif ($p['cat_type'] == 'vegetables') $icon = '🥦';
                 elseif ($p['cat_type'] == 'fruits') $icon = '🍎';
-                elseif ($p['cat_type'] == 'plants') $icon = '🪴';
+               
 
                 $imgPath = "assets/images/products/" . $p['image'];
                 $hasImg = $p['image'] && file_exists($imgPath);
@@ -544,7 +544,7 @@ $products = $stmt->fetchAll();
 <footer class="footer">
     <div class="row">
         <div class="col-md-4 mb-4">
-            <h5>🌱 GreenLife</h5>
+            <h5>🌱 Green Life</h5>
             <p style="color:#c8e6c9; font-size:14px;">
                 Premium quality seeds and small plants delivered across Karnataka.
                 Grow your green dream with us!
@@ -573,7 +573,7 @@ $products = $stmt->fetchAll();
         </div>
     </div>
     <div class="footer-bottom">
-        © 2026 GreenLife. All rights reserved. | Delivering Green Happiness Across Karnataka 🌱
+        © 2026 Green Life. All rights reserved. | Delivering Green Happiness Across Karnataka 🌱
     </div>
 </footer>
 

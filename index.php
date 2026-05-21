@@ -31,7 +31,7 @@ if ($came_from_landing) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - GreenLife</title>
+    <title>Login - Green Life</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css" rel="stylesheet">
     <style>
@@ -140,7 +140,7 @@ if ($came_from_landing) {
 
             <!-- Logo -->
             <div class="text-center mb-4">
-                <div class="brand-title">🌱 GreenLife</div>
+                <div class="brand-title">🌱 Green Life</div>
                 <div class="brand-sub">Plant a seed, grow a life</div>
                 <h5 class="mt-3" style="color:#333;">Welcome Back!</h5>
             </div>

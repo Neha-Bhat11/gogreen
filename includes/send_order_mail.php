@@ -17,8 +17,8 @@ function generateInvoicePDF($order, $items, $user) {
         $pdf = new TCPDF('P', 'mm', 'A4', true, 'UTF-8', false);
 
         // Document info
-        $pdf->SetCreator('GreenLife');
-        $pdf->SetAuthor('GreenLife');
+        $pdf->SetCreator('Green Life');
+        $pdf->SetAuthor('Green Life');
         $pdf->SetTitle('Invoice #' . $order['id']);
 
         // Remove default header/footer

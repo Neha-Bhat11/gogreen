@@ -54,7 +54,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Send welcome email
     sendOTPMail($email, $name, null, 'register');
 
-    $_SESSION['reg_success'] = "Registration successful! Welcome to GreenLife 🌱 Please login.";
+    $_SESSION['reg_success'] = "Registration successful! Welcome to Green Life 🌱 Please login.";
     header("Location: ../register.php");
     exit();
 }

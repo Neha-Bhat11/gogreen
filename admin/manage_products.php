@@ -215,7 +215,7 @@ $categories = $pdo->query("SELECT * FROM categories ORDER BY type, name")->fetch
 
 <!-- SIDEBAR -->
 <div class="sidebar">
-    <div class="sidebar-brand">🌱 GreenLife Admin</div>
+    <div class="sidebar-brand">🌱 Green Life Admin</div>
     <a href="dashboard.php" class="sidebar-link">
         <i class="bi bi-speedometer2"></i> Dashboard</a>
     <a href="manage_orders.php" class="sidebar-link">

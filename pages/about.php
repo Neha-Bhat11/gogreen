@@ -9,7 +9,7 @@ require_once '../includes/db.php';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About - GreenLife</title>
+    <title>About - Green Life</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link rel="stylesheet" href="../assets/css/style.css">
@@ -46,7 +46,7 @@ require_once '../includes/db.php';
 
 <!-- HERO -->
 <div class="hero-about mb-5">
-    <h1 style="font-weight:700;">🌍 About GreenLife</h1>
+    <h1 style="font-weight:700;">🌍 About Green Life</h1>
     <p style="font-size:18px; opacity:0.9;">
         We exist because clean air is not a luxury — it's a right.
     </p>
@@ -56,7 +56,7 @@ require_once '../includes/db.php';
 
     <!-- OUR STORY -->
     <div class="mission-box mb-5">
-        <h3 style="color:#1b5e20; font-weight:700;">🌱 Why We Started GreenLife</h3>
+        <h3 style="color:#1b5e20; font-weight:700;">🌱 Why We Started Green Life</h3>
         <p style="font-size:16px; line-height:1.9; color:#333; margin-top:15px;">
             We live in a time where breathing clean air has become a challenge.
             Pollution levels are rising every year, and our cities are losing
@@ -65,7 +65,7 @@ require_once '../includes/db.php';
             <strong>planting trees.</strong>
         </p>
         <p style="font-size:16px; line-height:1.9; color:#333;">
-            GreenLife was created with one mission: to make it easy for every
+            Green Life was created with one mission: to make it easy for every
             household in Karnataka to grow their own plants. We provide
             high-quality seeds of <strong>flowering plants, vegetables,
             medicinal plants, and fruit trees</strong> — all available
@@ -74,7 +74,7 @@ require_once '../includes/db.php';
         <p style="font-size:16px; line-height:1.9; color:#333;">
             Whether you want to grow a rose in your balcony, tomatoes in
             your backyard, or a neem tree in your garden —
-            GreenLife has the seed for you.
+            Green Life has the seed for you.
         </p>
     </div>
 

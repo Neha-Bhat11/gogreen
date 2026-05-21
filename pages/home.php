@@ -9,7 +9,7 @@ require_once '../includes/db.php';
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Home - GreenLife</title>
+    <title>Home - Green Life</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
     <link rel="stylesheet" href="../assets/css/style.css">
@@ -66,7 +66,7 @@ require_once '../includes/db.php';
     </div>
 
     <!-- WHY CHOOSE US -->
-    <h2 class="section-title mb-4">Why Choose GreenLife?</h2>
+    <h2 class="section-title mb-4">Why Choose Green Life?</h2>
     <div class="row g-4 mb-5">
         <div class="col-md-3 col-6">
             <div class="feature-card">

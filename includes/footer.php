@@ -3,7 +3,7 @@
         <div class="row g-4">
             <!-- Brand -->
             <div class="col-md-4">
-                <h5 style="color:white; font-weight:700;">🌱 GreenLife</h5>
+                <h5 style="color:white; font-weight:700;">🌱 Green Life</h5>
                 <p style="font-size:13px; color:#a5d6a7;">
                     Plant a seed, grow a life. We provide premium quality
                     seeds for flowers, vegetables and fruits across Karnataka.
@@ -46,7 +46,7 @@
         <div class="row">
             <div class="col-md-6">
                 <p style="font-size:12px; color:#a5d6a7; margin:0;">
-                    © 2026 GreenLife. All rights reserved.
+                    © 2026 Green Life. All rights reserved.
                 </p>
             </div>
             <div class="col-md-6 text-md-end">

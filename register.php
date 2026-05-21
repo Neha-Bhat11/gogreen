@@ -10,7 +10,7 @@ if (isset($_SESSION['user_id'])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Register - GreenLife</title>
+    <title>Register - Green Life</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
     <style>
         body {
@@ -62,7 +62,7 @@ if (isset($_SESSION['user_id'])) {
 
             <!-- Logo / Title -->
             <div class="text-center mb-4">
-                <div class="brand-title">🌱 GreenLife</div>
+                <div class="brand-title">🌱 Green Life</div>
                 <div class="brand-sub">Plant a seed, grow a life</div>
                 <h5 class="mt-3" style="color:#333;">Create Your Account</h5>
             </div>
