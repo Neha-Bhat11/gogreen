@@ -556,7 +556,7 @@ $products = $stmt->fetchAll();
             <a href="landing.php?type=flowers">Flowers</a>
             <a href="landing.php?type=vegetables">Vegetables</a>
             <a href="landing.php?type=fruits">Fruits</a>
-            <a href="landing.php?type=plants">Plants</a>
+            
         </div>
         <div class="col-md-3 mb-4">
             <h5>Account</h5>
